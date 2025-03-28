@@ -5,6 +5,9 @@ const { google } = require("googleapis");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const cors = require("cors");
+app.use(cors({ origin: "https://your-frontend-url.vercel.app" }));
+
 // MongoDB connection
 mongoose
   .connect("mongodb://localhost:27017/internal-tool")
