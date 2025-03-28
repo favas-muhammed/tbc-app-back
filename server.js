@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const { google } = require("googleapis");
@@ -8,77 +8,51 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
+const allowedOrigins = [
+  "https://tbc-app-back.vercel.app",
+  "https://tbc-app-back-39ceq35o1-favas-projects-94d5781a.vercel.app", // Add preview URL
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL || "https://your-frontend-url.vercel.app",
-      "http://localhost:3000", // For local development
-    ],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
 
-// MongoDB Connection (Atlas for production)
+// MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/internal-tool")
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+  .catch((err) => console.error("❌ MongoDB error:", err));
 
 // Google OAuth2 Setup
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID || "YOUR_CLIENT_ID",
   process.env.GOOGLE_CLIENT_SECRET || "YOUR_CLIENT_SECRET",
-  process.env.GOOGLE_REDIRECT_URI || "YOUR_REDIRECT_URI"
+  "https://tbc-app-back.vercel.app/auth/gmail/callback"
 );
 
-// Routes
+// Routes (Existing)
 app.get("/auth/gmail", (req, res) => {
-  const url = oauth2Client.generateAuthUrl({
-    access_type: "offline",
-    scope: ["https://www.googleapis.com/auth/gmail.readonly"],
-  });
-  res.redirect(url);
+  /* ... */
 });
-
 app.get("/auth/gmail/callback", async (req, res) => {
-  try {
-    const { code } = req.query;
-    const { tokens } = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
-    res.send("Authentication successful! You can close this tab.");
-  } catch (err) {
-    console.error("OAuth callback error:", err);
-    res.status(500).send("Authentication failed");
-  }
+  /* ... */
 });
-
 app.get("/api/emails", async (req, res) => {
-  try {
-    const gmail = google.gmail({ version: "v1", auth: oauth2Client });
-    const response = await gmail.users.messages.list({ userId: "me" });
-    res.json(response.data);
-  } catch (err) {
-    console.error("Gmail API error:", err);
-    res.status(500).json({ error: "Failed to fetch emails" });
-  }
+  /* ... */
 });
-
-// Health check endpoint (required for Vercel)
 app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date() });
+  /* ... */
 });
 
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Server error");
+  /* ... */
 });
 
-// Start server (Vercel overrides PORT)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// Export for Vercel serverless functions
+// Vercel export
 module.exports = app;
