@@ -7,9 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 // MongoDB connection
 mongoose
-  .connect(
-    "mongodb+srv://fmsakkeer:<db_password>@cluster0.fyeppqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect("mongodb://localhost:27017/internal-tool")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
