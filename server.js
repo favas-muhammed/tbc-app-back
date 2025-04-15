@@ -1,15 +1,19 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const connectDB = require("./db");
 const { google } = require("googleapis");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // MongoDB connection
-mongoose
-  .connect("mongodb://localhost:27017/internal-tool")
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+connectDB()
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
 
 // Google OAuth2 setup
 const oauth2Client = new google.auth.OAuth2(
