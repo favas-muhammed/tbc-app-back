@@ -46,6 +46,10 @@ app.get("/api/emails", async (req, res) => {
   res.json(response.data);
 });
 
+app.get("/", (req, res) => {
+  res.send("Backend API is running");
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
