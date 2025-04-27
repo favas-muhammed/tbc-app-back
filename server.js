@@ -5,7 +5,6 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // MongoDB connection
 connectDB()
@@ -78,7 +77,5 @@ app.get("/", (req, res) => {
   res.send("Backend API is running");
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Export the Express app as a handler for Vercel serverless functions
+module.exports = app;
